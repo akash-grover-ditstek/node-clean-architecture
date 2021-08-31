@@ -1,11 +1,9 @@
 const express = require('express');
 const UserController = require('./controller');
-const UserDatabase = require('./dao/database');
 const UserRepository = require('./repository');
 
 const userRoutes = (dependencies) => {
-  const database = new UserDatabase();
-  const repository = new UserRepository(database);
+  const repository = new UserRepository(dependencies.db.users);
   const router = express.Router();
   const controller = UserController( repository );
 

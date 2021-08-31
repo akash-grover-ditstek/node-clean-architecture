@@ -18,11 +18,16 @@ module.exports = (repository) => {
     var { name, email, password, image } = req.body;
     const salt = await bcrypt.genSalt(10);
     password = await bcrypt.hash(password, salt);
-    image = req.protocol + "://" + req.get('host') + "/" + req.file.path.replace("\\", "/");
+    if (req.file)
+      image = req.protocol + "://" + req.get('host') + "/" + req.file.path.replace("\\", "/");
     addUserCase.execute(name, email, password, image)
       .then(
         result => { res.json(result) },
-        err => { fs.unlinkSync(req.file.path);next(err) }
+        err => {
+          if (req.file)
+            fs.unlinkSync(req.file.path);
+          next(err)
+        }
       );
   }
 

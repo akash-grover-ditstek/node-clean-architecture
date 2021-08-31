@@ -1,14 +1,17 @@
-const mongoose = require('mongoose');
+require('dotenv').config({path:__dirname+'/./../config/.env'})
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER,process.env.DB_PASS, {
+  host: process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT,
+  operatorsAliases: 0,
+});
 
-module.exports = class Database {
-  constructor(connection){
-    this.connection = connection;
-    this.connected = false;
+const db = {};
 
-    mongoose.set('useNewUrlParser', true);
-    mongoose.set('useFindAndModify', false);
-    mongoose.set('useCreateIndex', true);
-    mongoose.set('useUnifiedTopology', true);
-    return mongoose.connect(this.connection);
-  }
-}
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.users = require('../models/user')(sequelize, Sequelize);
+
+
+module.exports = db;

@@ -1,5 +1,3 @@
-const User = require('../model');
-
 module.exports = (repository) => {
   async function execute(name, email, password, image) {
     return repository.getByEmail(email)
@@ -14,8 +12,7 @@ module.exports = (repository) => {
             return;
           }
           
-          const newUser = new User(name, email, password, image);
-          resolve(newUser);
+          resolve({name, email, password, image});
         })
           .then(user => {
             return repository.create(user);

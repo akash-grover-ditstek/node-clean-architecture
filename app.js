@@ -1,17 +1,26 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+cors = require('cors')
 const helmet = require('helmet');
 const path = require('path');
 const Routes = require('./src/routes');
-const Database = require('./src/database');
-const multer  = require('multer')
+const db = require('./src/database');
+const env = require('dotenv')
+const multer = require('multer')
 
 const app = express();
+
+const directoryName = __dirname
+env.config({
+  path: `${directoryName}/config/.env`
+})
+
 const port = process.env.PORT || 4444;
 
-app.use(express.urlencoded({extended: false}))
+
+app.use(cors())
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
-app.use(helmet());
+// app.use(helmet());
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,12 +41,14 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-const upload = multer({ storage: storage,fileFilter:fileFilter })
+
+const upload = multer({ storage: storage, fileFilter: fileFilter })
 
 const appRoutes = express.Router();
-app.use('/uploads',express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 appRoutes.route('/')
   .get((req, res) => {
+    res.setHeader('Content-Type', 'application/json');
     res.json({
       status: {
         application: "up"
@@ -45,12 +56,14 @@ appRoutes.route('/')
     })
   })
 
-app.use('/', Routes({multi:upload}));
+app.use('/', Routes({ multi: upload,db:db }));
 
-new Database("mongodb://localhost:27017/test")
-  .then(() => {
-    app.use('/', appRoutes);
-    app.listen(port, () => {
-      console.log(`Listening on ${port}. http://localhost:${port}`);
-    });
+
+app.use('/', appRoutes);
+app.use((error, req, res, next) => {
+  console.log(error.message)
+  res.status(500).json({ error: error.message })
+});
+app.listen(port, () => {
+  console.log(`Listening on ${port}. http://localhost:${port}`);
 });
