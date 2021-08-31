@@ -7,7 +7,7 @@ const Database = require('./src/database');
 const multer  = require('multer')
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4444;
 
 app.use(express.urlencoded({extended: false}))
 app.use(express.json());
