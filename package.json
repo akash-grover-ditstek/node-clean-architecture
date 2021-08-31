@@ -23,6 +23,7 @@
     "mongoose": "^5.7.7",
     "multer": "^1.4.3",
     "nodemon": "^1.19.4",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
   }
 }
