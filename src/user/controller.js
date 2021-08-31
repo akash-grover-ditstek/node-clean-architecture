@@ -5,7 +5,7 @@ const fs = require('fs')
 
 module.exports = (repository) => {
   const getUsers = (req, res, next) => {
-    const getUsersCase = GetUser(repository);
+    const getUsersCase = GetUsers(repository);
     getUsersCase.execute()
       .then(
         result => { res.json(result) },
