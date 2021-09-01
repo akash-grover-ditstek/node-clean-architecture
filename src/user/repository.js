@@ -4,9 +4,16 @@ module.exports = class UserRepository {
     this.model = model;
   }
 
-  create(user){
+  create(user) {
     return new Promise((resolve, reject) => {
       this.model.create(user);
+      resolve(user);
+    });
+  }
+  
+  update(user) {
+    return new Promise((resolve, reject) => {
+      this.model.update(user,{where:{id:user.id}});
       resolve(user);
     });
   }
@@ -18,11 +25,26 @@ module.exports = class UserRepository {
       })
     });
   }
+  
+  getById(id) {
+    return new Promise((resolve, reject) => {
+      this.model.findByPk(id).then(user => {
+        resolve(user);
+      })
+    });
+  }
 
   getAll() {
     return new Promise((resolve, reject) => {
       let users = this.model.findAll();
       resolve(users);
+    });
+  }
+
+  del(id) {
+    return new Promise((resolve, reject) => {
+      let users = this.model.destroy({ where: { id: id } });
+      resolve();
     });
   }
 }
