@@ -9,7 +9,15 @@ module.exports = (repository) => {
             reject(new Error('User Don\'t Exists'));
             return;
           }
-            resolve({ id, name, email, password, image });
+
+          repository.getByEmail(email).then((old) => {
+            if (old && old.id != user.id) {
+              reject(new Error('Email exists'))
+              return;
+            }
+            else
+              resolve({ id, name, email, password, image })
+          })
         })
           .then(user => {
             return repository.update(user);
