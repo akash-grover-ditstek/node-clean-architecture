@@ -43,7 +43,7 @@ module.exports = class UserRepository {
 
   del(id) {
     return new Promise((resolve, reject) => {
-      let users = this.model.destroy({ where: { id: id } });
+       this.model.destroy({ where: { id: id } });
       resolve();
     });
   }
